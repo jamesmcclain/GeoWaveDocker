@@ -8,7 +8,7 @@ Either on your host or in a sizable virtual machine, build GeoWave from source:
 export BUILD_ARGS="-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.2"
 git clone https://github.com/ngageoint/geowave.git
 cd geowave
-git fetch origin 0.9.1:0.9.
+git fetch origin 0.9.1:0.9.1
 git checkout 0.9.1
 mvn install -Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true $BUILD_ARGS
 mvn package -P geowave-tools-singlejar $BUILD_ARGS
