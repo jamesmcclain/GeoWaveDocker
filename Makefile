@@ -1,2 +1,2 @@
 all:
-	sudo docker build -t geowaveclient:0 .
+	docker build -t geowave:0 .
