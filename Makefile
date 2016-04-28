@@ -1,2 +1,2 @@
 all:
-	docker build -t geowave:0 .
+	docker build -t geowave:1 .
