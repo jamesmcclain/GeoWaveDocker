@@ -14,19 +14,39 @@ docker pull jamesmcclain/geowave:1
 
 Either on your host or in a sizable virtual machine, build GeoWave from source:
 
+Pull the GeoWave source code:
 ```bash
-export BUILD_ARGS="-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.2"
+export BUILD_ARGS="-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.3"
 git clone https://github.com/ngageoint/geowave.git
 cd geowave
-git fetch origin 0.9.1:0.9.1
-git checkout 0.9.1
+```
+
+Then create a new branch from commit `c7429a97` or nearby and apply the following patch:
+```patch
+diff --git a/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java b/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
+index c194594..806c183 100644
+--- a/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
++++ b/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
+@@ -34,7 +34,7 @@ public class NoDataMergeStrategy implements
+ 
+                // if next tile is null or if this tile does not have metadata, just
+                // keep this tile as is
+-               if ((nextTile != null) && (thisTile.getMetadata() != null)) {
++               if (false && (nextTile != null) && (thisTile.getMetadata() != null)) {
+                        if (nextTile instanceof MergeableRasterTile) {
+                                final NoDataMetadata thisTileMetadata = thisTile.getMetadata();
+                                final NoDataMetadata nextTileMetadata = nextTile.getMetadata();
+```
+
+Then build GeoWave:
+```
 mvn install -Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true $BUILD_ARGS
 mvn package -P geotools-container-singlejar $BUILD_ARGS
 mvn package -P accumulo-container-singlejar $BUILD_ARGS
 ```
 
 The Accumulo and Hadoop versions referenced in the `BUILD_ARGS` variable above were chosen to match those found in the `jamesmcclain/geowave:1`
-docker image and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based.
+docker image (and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based).
 
 #### Copy the GeoWave Jars ####
 
@@ -39,7 +59,6 @@ After the build is complete, either `cp` or `scp` the following files into the r
 #### Build the Container ####
 
 Type `make`.  You should now have a docker image called `geowave:1`.
-
 
 ## Run the Raster Ingest Example ##
 
