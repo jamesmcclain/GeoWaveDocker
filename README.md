@@ -19,31 +19,12 @@ Pull the GeoWave source code:
 export BUILD_ARGS="-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.3"
 git clone https://github.com/ngageoint/geowave.git
 cd geowave
-```
-
-Then create a new branch from commit `c7429a97` or nearby and apply the following patch:
-```patch
-diff --git a/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java b/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
-index c194594..806c183 100644
---- a/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
-+++ b/extensions/adapters/raster/src/main/java/mil/nga/giat/geowave/adapter/raster/adapter/merge/nodata/NoDataMergeStrategy.java
-@@ -34,7 +34,7 @@ public class NoDataMergeStrategy implements
- 
-                // if next tile is null or if this tile does not have metadata, just
-                // keep this tile as is
--               if ((nextTile != null) && (thisTile.getMetadata() != null)) {
-+               if (false && (nextTile != null) && (thisTile.getMetadata() != null)) {
-                        if (nextTile instanceof MergeableRasterTile) {
-                                final NoDataMetadata thisTileMetadata = thisTile.getMetadata();
-                                final NoDataMetadata nextTileMetadata = nextTile.getMetadata();
-```
-
-Then build GeoWave:
-```
 mvn install -Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true $BUILD_ARGS
 mvn package -P geotools-container-singlejar $BUILD_ARGS
 mvn package -P accumulo-container-singlejar $BUILD_ARGS
 ```
+
+GeoWave master commit `97c1c42` is believed to work.
 
 The Accumulo and Hadoop versions referenced in the `BUILD_ARGS` variable above were chosen to match those found in the `jamesmcclain/geowave:1`
 docker image (and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based).
