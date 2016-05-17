@@ -2,10 +2,10 @@
 
 ### Pulling ###
 
-To pull the image from Docker Hub, type:
+To pull the image from [DockerHub](https://hub.docker.com/r/jamesmcclain/geowave/), type:
 
 ```bash
-docker pull jamesmcclain/geowave:1
+docker pull jamesmcclain/geowave:2
 ```
 
 ### Building ###
@@ -24,22 +24,25 @@ mvn package -P geotools-container-singlejar $BUILD_ARGS
 mvn package -P accumulo-container-singlejar $BUILD_ARGS
 ```
 
-GeoWave master commit `97c1c42` is believed to work.
+GeoWave master commit `93cf3494` is believed to work.
 
-The Accumulo and Hadoop versions referenced in the `BUILD_ARGS` variable above were chosen to match those found in the `jamesmcclain/geowave:1`
-docker image (and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based).
+The Accumulo and Hadoop versions referenced in the `BUILD_ARGS` variable above were chosen to match those found in the
+`jamesmcclain/geowave:2` docker image
+(and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based).
 
 #### Copy the GeoWave Jars ####
 
 After the build is complete, either `cp` or `scp` the following files into the root of this repository:
-   * ./deploy/target/geowave-deploy-0.9.1-SNAPSHOT-accumulo-singlejar.jar
-   * ./deploy/target/geowave-deploy-0.9.1-SNAPSHOT-geoserver-singlejar.jar
+   * ./deploy/target/geowave-deploy-0.9.2-SNAPSHOT-accumulo-singlejar.jar
+   * ./deploy/target/geowave-deploy-0.9.2-SNAPSHOT-geoserver-singlejar.jar
 
-(It is assumed that `0.9.1-SNAPSHOT` is the GeoWave version that you built.)
+Only the first one is strictly required for this image,
+but you will also need the geoserver jar if you plan to build the [jamesmcclain/geoserver](https://github.com/jamesmcclain/GeoServerDocker) image.
+It is assumed that `0.9.2-SNAPSHOT` is the GeoWave version that you built.
 
 #### Build the Container ####
 
-Type `make`.  You should now have a docker image called `geowave:1`.
+Type `make`.  You should now have a docker image called `jamesmcclain/geowave:2`.
 
 ## Run the Raster Ingest Example ##
 
@@ -52,7 +55,7 @@ docker network create --driver bridge geowave
 docker run -it --rm -p 50095:50095 \
        --net=geowave --hostname leader --name leader \
        --entrypoint /scripts/leader.sh \
-       jamesmcclain/geowave:1
+       jamesmcclain/geowave:2
 ```
 
 Optional additional followers can be started by typing:
@@ -61,26 +64,5 @@ Optional additional followers can be started by typing:
 docker run -it --rm \
        --net=geowave --hostname follower1 --name follower1 \
        --entrypoint /scripts/follower.sh \
-       jamesmcclain/geowave:1
-```
-
-### Start the Client Container ###
-
-Build the [raster ingest code](https://github.com/jamesmcclain/GeoWaveIngest).
-Start the client container by typing:
-
-```bash
-docker run -it --rm \
-       --net=geowave
-       -v $(JAR_LOCATION):/jars:ro \
-       -v $(GEOTIFF_LOCATION):/rasters:ro \
-       java:openjdk-8u72-jdk
-```
-
-Perform the ingest by typing the following inside the container:
-
-```bash
-java -cp /jars/ingest-raster-assembly-0.jar \
-     com.example.ingest.raster.RasterIngest \
-     leader instance root password gwRaster /rasters/TC_NG_Baghdad_IQ_Geo.tif
+       jamesmcclain/geowave:2
 ```

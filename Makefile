@@ -1,2 +1,2 @@
 all:
-	docker build -t geowave:1 .
+	docker build -t jamesmcclain/geowave:2 .
