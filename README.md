@@ -28,7 +28,7 @@ GeoWave master commit `93cf3494` is believed to work.
 
 The Accumulo and Hadoop versions referenced in the `BUILD_ARGS` variable above were chosen to match those found in the
 `jamesmcclain/geowave:2` docker image
-(and the `jamesmcclain/accumulo:1` and `jamesmcclain/hadoop:1` images on which it is based).
+(and the `jamesmcclain/accumulo:2` and `jamesmcclain/hadoop:1` images on which it is based).
 
 #### Copy the GeoWave Jars ####
 
