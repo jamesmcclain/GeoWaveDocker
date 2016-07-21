@@ -5,7 +5,7 @@
 To pull the image from [DockerHub](https://hub.docker.com/r/jamesmcclain/geowave/), type:
 
 ```bash
-docker pull jamesmcclain/geowave:3
+docker pull jamesmcclain/geowave:4
 ```
 
 ### Building ###
@@ -42,7 +42,7 @@ It is assumed that `0.9.2-SNAPSHOT` is the GeoWave version that you built.
 
 #### Build the Container ####
 
-Type `make`.  You should now have a docker image called `jamesmcclain/geowave:3`.
+Type `make`.  You should now have a docker image called `jamesmcclain/geowave:4`.
 
 ### Start The GeoWave Container ###
 
@@ -50,11 +50,11 @@ Start a local GeoWave-enabled Accumulo instance by typing:
 
 ```bash
 docker network create --driver bridge geowave
-docker run -it --rm -p 9995:9995 --net=geowave --hostname leader --name leader jamesmcclain/geowave:3
+docker run -it --rm -p 9995:9995 --net=geowave --hostname leader --name leader jamesmcclain/geowave:4
 ```
 
 Optional additional followers can be started by typing:
 
 ```bash
-docker run -it --rm --net=geowave --hostname follower1 --name follower1 --entrypoint /scripts/follower.sh jamesmcclain/geowave:3
+docker run -it --rm --net=geowave --hostname follower1 --name follower1 --entrypoint /scripts/follower.sh jamesmcclain/geowave:4
 ```
