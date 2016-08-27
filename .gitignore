@@ -1,1 +1,7 @@
+geowave-*/
+geoserver/
+webapps/
+archives/*.zip
+geowave-tools.sh
 *.jar
+
