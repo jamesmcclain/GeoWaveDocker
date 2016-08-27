@@ -1,0 +1,6 @@
+FROM tomcat:8.0
+MAINTAINER James McClain <james.mcclain@gmail.com>
+
+ADD webapps/ /usr/local/tomcat/webapps/geoserver/
+ADD geowave-geoserver.jar /usr/local/tomcat/webapps/geoserver/WEB-INF/lib/
+ADD layer.xml /tmp/layer.xml

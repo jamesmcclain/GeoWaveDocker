@@ -9,6 +9,5 @@ ADD plugins/ ${GEOWAVE_HOME}/tools/plugins/
 ADD geowave-analytic-mapreduce.jar ${GEOWAVE_HOME}/tools/
 ADD geowave-accumulo.jar /opt/accumulo-1.7.2/lib/ext/
 ADD leader.sh /scripts/
-ADD VERSION.txt /
 
 CMD ["/scripts/leader.sh"]

@@ -1,0 +1,7 @@
+<config>
+  <user>root</user>
+  <password>password</password>
+  <zookeeper>leader</zookeeper>
+  <instance>instance</instance>
+  <gwNamespace>gwRaster</gwNamespace>
+</config>

@@ -4,6 +4,11 @@ SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
 BUILD_ARGS := "-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.3"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
 
+GEOSERVER_VERSION := 2.8.3
+GEOSERVER_DIST := archives/geoserver-${GEOSERVER_VERSION}-war.zip
+GEOSERVER_WAR := geoserver/geoserver.war
+GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geoserver-singlejar.jar
+
 DIST_ARCHIVE := archives/${GEOWAVE_SHA}.zip
 SCRIPT := geowave-${GEOWAVE_SHA}/core/cli/src/main/resources/geowave-tools.sh
 TOOLS := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-tools.jar
@@ -19,39 +24,54 @@ ANALYTIC := geowave-${GEOWAVE_SHA}/analytics/mapreduce/target/munged/geowave-ana
 ITERATORS := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-accumulo-singlejar.jar
 
 
-all: ${SCRIPT} ${TOOLS} ${PLUGINS} ${ANALYTIC} ${ITERATORS} ${GEOSERVER}
+all: geoserver-image geowave-image
+
+geowave-image: ${SCRIPT} ${TOOLS} ${PLUGINS} ${ANALYTIC} ${ITERATORS}
 	mkdir -p plugins/
-	cp -f ${SCRIPT} geowave-tools.sh
-	chmod ugo+x geowave-tools.sh
+	cp -f ${SCRIPT} geowave-tools.sh; chmod ugo+x geowave-tools.sh
 	cp -f ${TOOLS} geowave-tools.jar
 	cp -f ${PLUGINS} plugins/
 	cp -f ${ANALYTIC} geowave-analytic-mapreduce.jar
 	cp -f ${ITERATORS} geowave-accumulo.jar
-	cp -f ${GEOSERVER} geowave-geoserver.jar
-	docker build -t jamesmcclain/geowave:$(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,') .
+	docker build -f Dockerfile.geowave -t jamesmcclain/geowave:${SHA} .
+
+${SCRIPT} ${TOOLS} ${PLUGINS} ${ANALYTIC} ${ITERATORS} ${GEOSERVER_JAR}:
+	make world
 
 .PHONY world: geowave-${GEOWAVE_SHA}/
-	docker run -it --rm \
-		--env BUILD_ARGS=${BUILD_ARGS} \
-		--env EXTRA_ARGS=${EXTRA_ARGS} \
-		--volume $(PWD)/geowave-${GEOWAVE_SHA}:/geowave:rw \
-		--volume $(HOME)/.m2:/root/.m2:rw \
-		--volume $(PWD)/scripts:/scripts:ro \
-		maven:3-jdk-7 /scripts/build.sh $(shell id -u) $(shell id -g)
+	 docker run -it --rm \
+	    --env BUILD_ARGS=${BUILD_ARGS} \
+	    --env EXTRA_ARGS=${EXTRA_ARGS} \
+	    --volume $(PWD)/geowave-${GEOWAVE_SHA}:/geowave:rw \
+	    --volume $(HOME)/.m2:/root/.m2:rw \
+	    --volume $(PWD)/scripts:/scripts:ro \
+	    maven:3-jdk-7 /scripts/build.sh $(shell id -u) $(shell id -g)
 
 ${DIST_ARCHIVE}:
 	(cd archives ; curl -L -C - -O "https://github.com/ngageoint/geowave/archive/${GEOWAVE_SHA}.zip")
 
 geowave-${GEOWAVE_SHA}/: ${DIST_ARCHIVE}
-	rm -rf geowave-${GEOWAVE_SHA}/
-	unzip $<
+	unzip -u $<
+
+geoserver-image: ${GEOSERVER_JAR} ${GEOSERVER_WAR}
+	unzip -u ${GEOSERVER_WAR} -d webapps/
+	cp -f ${GEOSERVER_JAR} geowave-geoserver.jar
+	docker build -f Dockerfile.geoserver -t jamesmcclain/geoserver:${SHA} .
+
+${GEOSERVER_WAR}: ${GEOSERVER_DIST}
+	unzip -u $< -d geoserver/
+
+${GEOSERVER_DIST}:
+	(cd archives ; curl -L -C - -O "http://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_VERSION}/geoserver-${GEOSERVER_VERSION}-war.zip")
 
 clean:
-	rm -f *.jar geowave-tools.sh
-	rm -rf plugins
+	rm -f *.jar geoserver.zip geowave-tools.sh
+	rm -rf plugins/
 
 cleaner: clean
 	rm -rf geowave-${GEOWAVE_SHA}/
+	rm -rf geoserver/
 
 cleanest: cleaner
 	rm -f ${DIST_ARCHIVE}
+	rm -f ${GEOSERVER_DIST}
