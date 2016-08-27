@@ -1,7 +1,13 @@
 FROM jamesmcclain/accumulo:7
 MAINTAINER James McClain <james.mcclain@gmail.com>
 
-ADD geowave-deploy-0.9.3-SNAPSHOT-accumulo-singlejar.jar /opt/accumulo-1.7.2/lib/ext/
+ENV GEOWAVE_HOME /usr/local/geowave
+
+ADD geowave-tools.sh ${GEOWAVE_HOME}/tools/
+ADD geowave-tools.jar ${GEOWAVE_HOME}/tools/
+ADD plugins/ ${GEOWAVE_HOME}/tools/plugins/
+ADD geowave-analytic-mapreduce.jar ${GEOWAVE_HOME}/tools/
+ADD geowave-accumulo.jar /opt/accumulo-1.7.2/lib/ext/
 ADD leader.sh /scripts/
 ADD VERSION.txt /
 
