@@ -18,13 +18,16 @@ Optional additional followers can be started by typing:
 docker run -it --rm --net=geowave --entrypoint /scripts/follower.sh jamesmcclain/geowave:8760ce2
 ```
 
-Start a GeoWave-enabled GeoServer container by typing:
-```bash
-docker run -it --rm --net=geowave -p 8080:8080 jamesmcclain/geoserver:8760ce2
-```
-
+# Use the Command Line Tools #
 The GeoWave command line tools can be accessed by starting the container
 ```bash
 docker run -it --rm --net=geowave jamesmcclain/geowave:8760ce2 bash
 ```
 and navigating to the `/usr/local/geowave/tools` directory.
+
+# Start the GeoServer Container #
+
+Start a GeoWave-enabled GeoServer container by typing:
+```bash
+docker run -it --rm --net=geowave -p 8080:8080 jamesmcclain/geoserver:8760ce2
+```
