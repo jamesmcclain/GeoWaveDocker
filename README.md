@@ -1,3 +1,5 @@
+Note: This image is intended for local development.  Those interested in using docker to run GeoWave on EMR (for development or deployment) should consider using [geodocker](https://github.com/geodocker/geodocker).
+
 # Build #
 
 The images `jamesmcclain/geowave:latest` and `jamesmcclain:geoserver:latest` can be built by typing:
