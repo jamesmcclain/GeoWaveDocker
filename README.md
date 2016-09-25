@@ -1,6 +1,6 @@
 This image is intended for local development.
 If you are interested in using Docker to run GeoWave on EMR (for development or deployment),
-please should consider using [GeoDocker](https://github.com/geodocker/geodocker).
+please consider using [GeoDocker](https://github.com/geodocker/geodocker).
 
 # Build #
 
