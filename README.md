@@ -1,8 +1,10 @@
-Note: This image is intended for local development.  Those interested in using docker to run GeoWave on EMR (for development or deployment) should consider using [geodocker](https://github.com/geodocker/geodocker).
+This image is intended for local development.
+If you are interested in using Docker to run GeoWave on EMR (for development or deployment),
+please should consider using [GeoDocker](https://github.com/geodocker/geodocker).
 
 # Build #
 
-The images `jamesmcclain/geowave:latest` and `jamesmcclain:geoserver:latest` can be built by typing:
+The images `jamesmcclain/geowave:c127c16` and `jamesmcclain:geoserver:c127c16` can be built by typing:
 ```bash
 make
 ```
@@ -12,18 +14,18 @@ make
 Start a GeoWave-enabled Accumulo container by typing:
 ```bash
 docker network create --driver bridge geowave
-docker run -it --rm -p 9995:50095 --net=geowave --hostname leader --name leader jamesmcclain/geowave:8760ce2
+docker run -it --rm -p 50095:50095 --net=geowave --hostname leader --name leader jamesmcclain/geowave:c127c16
 ```
 
 Optional additional followers can be started by typing:
 ```bash
-docker run -it --rm --net=geowave --entrypoint /scripts/follower.sh jamesmcclain/geowave:8760ce2
+docker run -it --rm --net=geowave --entrypoint /scripts/follower.sh jamesmcclain/geowave:c127c16
 ```
 
 # Use the Command Line Tools #
 The GeoWave command line tools can be accessed by starting the container
 ```bash
-docker run -it --rm --net=geowave jamesmcclain/geowave:8760ce2 bash
+docker run -it --rm --net=geowave jamesmcclain/geowave:c127c16 bash
 ```
 and navigating to the `/usr/local/geowave/tools` directory.
 
@@ -31,5 +33,5 @@ and navigating to the `/usr/local/geowave/tools` directory.
 
 Start a GeoWave-enabled GeoServer container by typing:
 ```bash
-docker run -it --rm --net=geowave -p 8080:8080 jamesmcclain/geoserver:8760ce2
+docker run -it --rm --net=geowave -p 8080:8080 jamesmcclain/geoserver:c127c16
 ```
