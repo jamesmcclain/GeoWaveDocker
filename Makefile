@@ -4,10 +4,10 @@ SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
 BUILD_ARGS := "-Daccumulo.version=1.7.2 -Daccumulo.api=1.7 -Dhadoop.version=2.7.3 -Dgeotools.version=16.0 -Dgeoserver.version=2.10.0"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
 
-GEOSERVER_VERSION := 2.10.0
+GEOSERVER_VERSION := 2.10.1
 GEOSERVER_DIST := archives/geoserver-${GEOSERVER_VERSION}-war.zip
 GEOSERVER_WAR := geoserver/geoserver.war
-GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geoserver-singlejar.jar
+GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geotools.jar
 
 DIST_ARCHIVE := archives/${GEOWAVE_SHA}.zip
 SCRIPT := geowave-${GEOWAVE_SHA}/core/cli/src/main/resources/geowave-tools.sh
@@ -54,6 +54,7 @@ geowave-${GEOWAVE_SHA}/: ${DIST_ARCHIVE}
 	unzip -u $<
 
 geoserver-image: ${GEOSERVER_JAR} ${GEOSERVER_WAR}
+	rm -rf webapps/
 	unzip -u ${GEOSERVER_WAR} -d webapps/
 	cp -f ${GEOSERVER_JAR} geowave-geoserver.jar
 	docker build -f Dockerfile.geoserver -t jamesmcclain/geoserver:${SHA} .
