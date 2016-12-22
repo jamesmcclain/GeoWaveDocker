@@ -1,13 +1,13 @@
-GEOWAVE_VERSION := 0.9.3-SNAPSHOT
-GEOWAVE_SHA := c127c16ead14c5309172dd63b9152dbd2ede80d9
+GEOWAVE_VERSION := 0.9.4-SNAPSHOT
+GEOWAVE_SHA := c790acb23d29d896bbf64281b6b3fc318c19350c
 SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
-BUILD_ARGS := "-Daccumulo.version=1.7.1 -Daccumulo.api=1.7 -Dhadoop.version=2.7.2 -Dgeotools.version=14.2 -Dgeoserver.version=2.8.3"
+BUILD_ARGS := "-Daccumulo.version=1.7.2 -Daccumulo.api=1.7 -Dhadoop.version=2.7.3 -Dgeotools.version=16.0 -Dgeoserver.version=2.10.0"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
 
-GEOSERVER_VERSION := 2.8.3
+GEOSERVER_VERSION := 2.10.1
 GEOSERVER_DIST := archives/geoserver-${GEOSERVER_VERSION}-war.zip
 GEOSERVER_WAR := geoserver/geoserver.war
-GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geoserver-singlejar.jar
+GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geotools.jar
 
 DIST_ARCHIVE := archives/${GEOWAVE_SHA}.zip
 SCRIPT := geowave-${GEOWAVE_SHA}/core/cli/src/main/resources/geowave-tools.sh
@@ -21,7 +21,7 @@ PLUGINS := geowave-${GEOWAVE_SHA}/extensions/formats/geolife/target/geowave-form
  geowave-${GEOWAVE_SHA}/extensions/formats/geotools-vector/target/geowave-format-vector-${GEOWAVE_VERSION}.jar \
  geowave-${GEOWAVE_SHA}/extensions/formats/gdelt/target/geowave-format-gdelt-${GEOWAVE_VERSION}.jar
 ANALYTIC := geowave-${GEOWAVE_SHA}/analytics/mapreduce/target/munged/geowave-analytic-mapreduce-${GEOWAVE_VERSION}.jar
-ITERATORS := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-accumulo-singlejar.jar
+ITERATORS := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-accumulo.jar
 
 
 all: geoserver-image geowave-image
@@ -45,7 +45,7 @@ ${SCRIPT} ${TOOLS} ${PLUGINS} ${ANALYTIC} ${ITERATORS} ${GEOSERVER_JAR}:
 	    --volume $(PWD)/geowave-${GEOWAVE_SHA}:/geowave:rw \
 	    --volume $(HOME)/.m2:/root/.m2:rw \
 	    --volume $(PWD)/scripts:/scripts:ro \
-	    maven:3-jdk-7 /scripts/build.sh $(shell id -u) $(shell id -g)
+	    maven:3-jdk-8 /scripts/build.sh $(shell id -u) $(shell id -g)
 
 ${DIST_ARCHIVE}:
 	(cd archives ; curl -L -C - -O "https://github.com/ngageoint/geowave/archive/${GEOWAVE_SHA}.zip")
@@ -54,6 +54,7 @@ geowave-${GEOWAVE_SHA}/: ${DIST_ARCHIVE}
 	unzip -u $<
 
 geoserver-image: ${GEOSERVER_JAR} ${GEOSERVER_WAR}
+	rm -rf webapps/
 	unzip -u ${GEOSERVER_WAR} -d webapps/
 	cp -f ${GEOSERVER_JAR} geowave-geoserver.jar
 	docker build -f Dockerfile.geoserver -t jamesmcclain/geoserver:${SHA} .
