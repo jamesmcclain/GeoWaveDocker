@@ -1,5 +1,5 @@
-GEOWAVE_VERSION := 0.9.4-SNAPSHOT
-GEOWAVE_SHA := e62deaffb74901eedf279287e56ea0fc38a9a2e6
+GEOWAVE_VERSION := 0.9.5-SNAPSHOT
+GEOWAVE_SHA := 3f085d660d636938c9b13d69a9823f067cb8087d
 SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
 BUILD_ARGS := "-Daccumulo.version=1.7.2 -Daccumulo.api=1.7 -Dhadoop.version=2.7.3 -Dgeotools.version=16.0 -Dgeoserver.version=2.10.0"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
@@ -10,7 +10,7 @@ GEOSERVER_WAR := geoserver/geoserver.war
 GEOSERVER_JAR := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-geoserver.jar
 
 DIST_ARCHIVE := archives/${GEOWAVE_SHA}.zip
-SCRIPT := geowave-${GEOWAVE_SHA}/core/cli/src/main/resources/geowave-tools.sh
+SCRIPT := geowave-${GEOWAVE_SHA}/deploy/packaging/rpm/centos/6/SOURCES/geowave-tools.sh
 TOOLS := geowave-${GEOWAVE_SHA}/deploy/target/geowave-deploy-${GEOWAVE_VERSION}-tools.jar
 PLUGINS := geowave-${GEOWAVE_SHA}/extensions/formats/geolife/target/geowave-format-geolife-${GEOWAVE_VERSION}.jar \
  geowave-${GEOWAVE_SHA}/extensions/formats/stanag4676/format/target/geowave-format-4676-${GEOWAVE_VERSION}.jar \
