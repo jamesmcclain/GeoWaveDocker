@@ -1,5 +1,5 @@
 GEOWAVE_VERSION := 0.9.5-SNAPSHOT
-GEOWAVE_SHA := 00536dbc09d73844986e9445e4759e0e85d69867
+GEOWAVE_SHA := f04ca1de2dcda039d0962636154441eee86428cf
 SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
 BUILD_ARGS := "-Daccumulo.version=1.7.2 -Daccumulo.api=1.7 -Dhadoop.version=2.7.3 -Dgeotools.version=16.0 -Dgeoserver.version=2.10.0"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
@@ -48,7 +48,7 @@ ${SCRIPT} ${TOOLS} ${PLUGINS} ${ANALYTIC} ${ITERATORS} ${GEOSERVER_JAR}:
 	    maven:3-jdk-8 /scripts/build.sh $(shell id -u) $(shell id -g)
 
 ${DIST_ARCHIVE}:
-	(cd archives ; curl -L -C - -O "https://github.com/ngageoint/geowave/archive/${GEOWAVE_SHA}.zip")
+	(cd archives ; curl -L -C - -O "https://github.com/locationtech/geowave/archive/${GEOWAVE_SHA}.zip")
 
 geowave-${GEOWAVE_SHA}/: ${DIST_ARCHIVE}
 	unzip -u $<
