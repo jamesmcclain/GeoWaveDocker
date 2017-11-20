@@ -1,5 +1,5 @@
 GEOWAVE_VERSION := 0.9.6-SNAPSHOT
-GEOWAVE_SHA := 9b3184696e7b508256c531456677b86699993535
+GEOWAVE_SHA := 17ac77747ecc659ef2b204ee92899a892e70378b
 SHA := $(shell echo ${GEOWAVE_SHA} | sed 's,\(.......\).*,\1,')
 BUILD_ARGS := "-Daccumulo.version=1.7.2 -Daccumulo.api=1.7 -Dhadoop.version=2.7.3 -Dgeotools.version=16.0 -Dgeoserver.version=2.10.0"
 EXTRA_ARGS := "-Dfindbugs.skip=true -DskipFormat=true -DskipITs=true -DskipTests=true"
